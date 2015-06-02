@@ -28,6 +28,7 @@
     "dependencies": {
         "request": "latest",
         "sprintf-js": "latest",
+        "nock": "latest",
         "q": "latest"
     }
 }
