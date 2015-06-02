@@ -26,6 +26,8 @@
         "mocha": "latest"
     },
     "dependencies": {
-        "request": "latest"
+        "request": "latest",
+        "sprintf-js": "latest",
+        "q": "latest"
     }
 }
