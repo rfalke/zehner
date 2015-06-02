@@ -3,10 +3,7 @@
 var urls = require("url");
 var fs = require("fs");
 var paths = require("path");
-
-function endsWith(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
+var endsWith = require("./utils").endsWith;
 
 function isDir(path) {
     return fs.existsSync(path) && fs.statSync(path).isDirectory();

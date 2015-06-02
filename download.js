@@ -6,10 +6,8 @@ var sprintf = require("sprintf-js").sprintf;
 var EventEmitter = require("events").EventEmitter;
 var file_support = require("./file_support");
 var extraction = require("./extraction");
-
-function startsWith(str, suffix) {
-    return str.indexOf(suffix) === 0;
-}
+var startsWith = require("./utils").startsWith;
+var verbose = false;
 
 function downloadOneUrl(outputDir, url, logPrefix) {
     var ee = new EventEmitter();
@@ -45,10 +43,12 @@ function downloadOneUrl(outputDir, url, logPrefix) {
             ee.emit("failed");
         } else {
             var fname = file_support.write_response_to_file(outputDir, body, url);
-            console.log("Wrote " + fname);
+            console.log("     wrote " + fname);
             var links = extraction.extract_links(url, body);
-            console.log("Got the following links:");
-            console.log(links);
+            if (verbose) {
+                console.log("Got the following links:");
+                console.log(links);
+            }
             ee.emit("success", links);
         }
     });
@@ -56,7 +56,7 @@ function downloadOneUrl(outputDir, url, logPrefix) {
 }
 
 function downloadOneUrlWithRetryRec(outputDir, url, retry, numRetries, defer) {
-    var ee = downloadOneUrl(outputDir, url, sprintf("%2d/%2d: ", retry + 1, numRetries));
+    var ee = downloadOneUrl(outputDir, url, sprintf("    *** retry %d/%d: ", retry + 1, numRetries));
     ee.on("success", function (urls) {
         defer.resolve(urls);
     }).on("failed", function () {

@@ -1,14 +1,8 @@
 "use strict";
 
 var urls = require("url");
-
-function startsWith(str, suffix) {
-    return str.indexOf(suffix) === 0;
-}
-
-function endsWith(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
+var startsWith = require("./utils").startsWith;
+var endsWith = require("./utils").endsWith;
 
 function make_link_absolute(baseUrl, url) {
     var result = urls.resolve(baseUrl, url);

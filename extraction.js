@@ -1,12 +1,8 @@
 "use strict";
 
 var url_support = require("./url_support");
-
-function uniq(a) {
-    return a.sort().filter(function (item, pos, ary) {
-        return !pos || item !== ary[pos - 1];
-    });
-}
+var sort_and_uniq = require("./utils").sort_and_uniq;
+var verbose = false;
 
 function extract_links(baseUrl, content) {
     function inner(pattern) {
@@ -30,7 +26,7 @@ function extract_links(baseUrl, content) {
     unsupported = unsupported.concat(absolute.filter(function (url) {
         return !url_support.is_valid_url(url);
     }));
-    if (unsupported.length > 0) {
+    if (unsupported.length > 0 && verbose) {
         console.log("Ignore bad links: ", unsupported);
     }
     var filtered2 = absolute.filter(function (url) {
@@ -38,7 +34,7 @@ function extract_links(baseUrl, content) {
     });
 
     //noinspection UnnecessaryLocalVariableJS
-    var sorted_and_without_duplicates = uniq(filtered2);
+    var sorted_and_without_duplicates = sort_and_uniq(filtered2);
     return sorted_and_without_duplicates;
 }
 
