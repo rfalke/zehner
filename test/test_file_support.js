@@ -16,7 +16,7 @@ function rm_r(dir) {
     fs.rmdirSync(dir);
 }
 
-describe('file_support', function () {
+describe('file support', function () {
     var tmpDir;
 
     beforeEach(function () {
