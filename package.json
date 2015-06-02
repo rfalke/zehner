@@ -4,7 +4,7 @@
     "description": "web crawler with node.js",
     "main": "index.js",
     "scripts": {
-        "lint": "jshint **/*.js",
+        "lint": "jshint -c .jshintrc *.js **/*.js",
         "test": "mocha test/"
     },
     "repository": {
@@ -24,5 +24,8 @@
     "devDependencies": {
         "jshint": "latest",
         "mocha": "latest"
+    },
+    "dependencies": {
+        "request": "latest"
     }
 }
