@@ -6,9 +6,7 @@ var utils = require("./utils");
 
 var outputDir = process.argv[2];
 var startUrl = process.argv[3];
-var numRetries = 3;
-
-console.log(process.argv);
+var numRetries = 5;
 
 function download_one_batch_seq(outputDir, urlsTodo, callback) {
     var newUrls = [];
@@ -18,11 +16,9 @@ function download_one_batch_seq(outputDir, urlsTodo, callback) {
             callback(utils.sort_and_uniq(newUrls));
         } else {
             var url = urlsTodo[index];
-            console.log(sprintf("%4d/%4d: start downloading %s", index + 1, urlsTodo.length, url));
-            var promise = download.downloadOneUrlWithRetry(outputDir, url, numRetries);
+            var promise = download.downloadOneUrlWithRetry(outputDir, url, numRetries, sprintf("%d/%d", index + 1, urlsTodo.length));
             promise.then(function (urls) {
                 newUrls = newUrls.concat(urls);
-                console.log(sprintf("%4d/%4d: finished downloading %s", index + 1, urlsTodo.length, url));
                 helper(index + 1);
             }, function () {
                 helper(index + 1);
@@ -33,14 +29,16 @@ function download_one_batch_seq(outputDir, urlsTodo, callback) {
     helper(0);
 }
 
-function driver(outputDir, urlsTodo, urlsSoFar) {
-    console.log("=== starting a batch with " + urlsTodo.length + " url(s)");
+function driver(outputDir, urlsTodo, urlsSoFar, completedBatches) {
+    console.log(sprintf("driver: start batch %d with %d urls (%d urls already done)", completedBatches + 1, urlsTodo.length, urlsSoFar.length));
     download_one_batch_seq(outputDir, urlsTodo, function (allNewUrls) {
         console.log("=== finished the batch with " + allNewUrls.length + " new url(s)");
         urlsSoFar = utils.sort_and_uniq(urlsSoFar.concat(urlsTodo));
         var reallyNewUrls = utils.without(allNewUrls, urlsSoFar);
-        driver(outputDir, reallyNewUrls, urlsSoFar);
+        if (reallyNewUrls.length > 0) {
+            driver(outputDir, reallyNewUrls, urlsSoFar, completedBatches + 1);
+        }
     });
 }
 
-driver(outputDir, [startUrl], []);
+driver(outputDir, [startUrl], [], 0);

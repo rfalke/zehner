@@ -7,43 +7,34 @@ var EventEmitter = require("events").EventEmitter;
 var file_support = require("./file_support");
 var extraction = require("./extraction");
 var startsWith = require("./utils").startsWith;
+var utils = require("./utils");
+var logger = require("./logger");
 var verbose = false;
 
-function downloadOneUrl(outputDir, url, logPrefix) {
+function downloadOneUrl(outputDir, url, logPrefix, logPrefix2) {
     var ee = new EventEmitter();
 
-    function reportError(error) {
-        console.log(logPrefix + "Got an error while downloading " + url + ": " + error);
-    }
-
-    function reportBadStatusTemp(statusCode) {
-        console.log(logPrefix + "Got the status code " + statusCode + " instead of the expected 200 while downloading " + url + " (will retry)");
-    }
-
-    function reportBadStatusFatal(statusCode) {
-        console.log(logPrefix + "Got the status code " + statusCode + " instead of the expected 200 while downloading " + url + " (will not retry)");
-    }
-
-    function reportBadDns() {
-        console.log(logPrefix + "Failed to download " + url + " because the host name is unknown.");
-    }
-
+    logger.log_start("%s downloading '%s' %s ...", logPrefix, url, logPrefix2);
+    var start = Date.now();
     requests(url, function (error, response, body) {
+        var duration = (Date.now() - start) / 1000;
         if (error) {
-            reportError(error);
+            logger.log_finished("got %s after %.1f seconds", duration);
             ee.emit("tempFailed");
         } else if (response.statusCode === 403 || response.statusCode === 404) {
-            reportBadStatusFatal(response.statusCode);
+            logger.log_finished("got %d after %.1f seconds", response.statusCode, duration);
             ee.emit("failed");
         } else if (response.statusCode !== 200) {
-            reportBadStatusTemp(response.statusCode);
+            logger.log_finished("got %d after %.1f seconds", response.statusCode, duration);
             ee.emit("tempFailed");
         } else if (startsWith(response.request.href, "http://navigationshilfe1.t-online.de/dnserror?")) {
-            reportBadDns();
+            logger.log_finished("got bad dns after %.1f seconds", duration);
             ee.emit("failed");
         } else {
+            logger.log_finished("got %s bytes in %.1f seconds (%s)", utils.format_bytes(body.length), duration, utils.format_rate(body.length, duration));
             var fname = file_support.write_response_to_file(outputDir, body, url);
-            console.log("     wrote " + fname);
+
+            logger.log_other("    saved to %s", fname);
             var links = extraction.extract_links(url, body);
             if (verbose) {
                 console.log("Got the following links:");
@@ -55,25 +46,26 @@ function downloadOneUrl(outputDir, url, logPrefix) {
     return ee;
 }
 
-function downloadOneUrlWithRetryRec(outputDir, url, retry, numRetries, defer) {
-    var ee = downloadOneUrl(outputDir, url, sprintf("    *** retry %d/%d: ", retry + 1, numRetries));
+function downloadOneUrlWithRetryRec(outputDir, url, retry, numRetries, logPrefix, defer) {
+    var ee = downloadOneUrl(outputDir, url, logPrefix, sprintf("%d/%d: ", retry + 1, numRetries));
     ee.on("success", function (urls) {
         defer.resolve(urls);
     }).on("failed", function () {
+        logger.log_other("    *** failed to download '%s'", url);
         defer.reject();
     }).on("tempFailed", function () {
         if (retry === numRetries - 1) {
             defer.reject();
         } else {
-            downloadOneUrlWithRetryRec(outputDir, url, retry + 1, numRetries, defer);
+            downloadOneUrlWithRetryRec(outputDir, url, retry + 1, numRetries, logPrefix, defer);
         }
     });
     return defer.promise;
 }
 
-function downloadOneUrlWithRetry(outputDir, url, numRetries) {
+function downloadOneUrlWithRetry(outputDir, url, numRetries, logPrefix) {
     console.assert(numRetries > 0);
-    return downloadOneUrlWithRetryRec(outputDir, url, 0, numRetries, q.defer());
+    return downloadOneUrlWithRetryRec(outputDir, url, 0, numRetries, logPrefix, q.defer());
 }
 
 module.exports = {
