@@ -6,7 +6,7 @@ Zehner is an url fetcher like wget using node.js
 ## Usage
 
 ``` bash
-$ node zehner.js -h
+$ zehner.js -h
 usage: zehner.js [-h] [-v] [-o DIR] [-p P] [--r1] [--r2] [--r3] URL
 
 Zehner: A web crawler written in node.js.
@@ -30,20 +30,20 @@ Optional arguments:
 
 * Download single file 
 ``` bash
-$ node zehner.js http://www.example.com
+$ zehner.js http://www.example.com
 ```
 
 * Dive into sub directories 
 ``` bash
-$ node zehner.js -o output_dir --r1 http://www.example.com/some/path
+$ zehner.js -o output_dir --r1 http://www.example.com/some/path
 ```
 
 * Fetch all references files from the host 
 ``` bash
-$ node zehner.js -o output_dir --r2 http://www.example.com/some/path
+$ zehner.js -o output_dir --r2 http://www.example.com/some/path
 ```
 
 * Fetch all references files from all hosts 
 ``` bash
-$ node zehner.js -o output_dir --r3 http://www.example.com/some/path
+$ zehner.js -o output_dir --r3 http://www.example.com/some/path
 ```
