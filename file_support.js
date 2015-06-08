@@ -50,7 +50,7 @@ function write_file(fname, content) {
 }
 
 function write_response_to_file(basePath, content, url) {
-    var decomposed = urls.parse(url, true);
+    var decomposed = urls.parse(url);
     var fname = basePath + "/" + decomposed.hostname + decomposed.path;
     var fname2 = adjust_file_name(fname);
     ensure_parent_dir_exists(fname2);

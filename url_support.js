@@ -6,9 +6,12 @@ var endsWith = require("./utils").endsWith;
 
 function make_link_absolute(baseUrl, url) {
     var result = urls.resolve(baseUrl, url);
-    var parsed = urls.parse(result, true);
+    var parsed = urls.parse(result);
     parsed.hash = "";
-    if (parsed.pathname !== "/" && endsWith(parsed.pathname, "/")) {
+    if (parsed.pathname === null) {
+        // will be sorted out later
+        parsed.protocol = "BAD";
+    } else if (parsed.pathname !== "/" && endsWith(parsed.pathname, "/")) {
         parsed.pathname += "DOT";
     }
     return urls.format(parsed);
@@ -19,7 +22,7 @@ function is_supported_url(url) {
     /* jshint ignore:start */
     javascriptScheme = "javascript:";
     /* jshint ignore:end */
-    var is_bad_url = startsWith(url, "mailto:") || startsWith(url, javascriptScheme) || startsWith(url, "ftp:") || startsWith(url, "http:///") || url === "#";
+    var is_bad_url = startsWith(url, "mailto:") || startsWith(url, javascriptScheme) || startsWith(url, "ftp:") || startsWith(url, "whatsapp:") || startsWith(url, "http:///") || url === "#";
     return !is_bad_url;
 }
 

@@ -5,6 +5,7 @@ var nock = require('nock');
 var os = require("os");
 var fs = require("fs");
 var download = require("../download");
+var loggers = require("../logger");
 
 describe('download', function () {
     function rm_r(dir) {
@@ -31,7 +32,7 @@ describe('download', function () {
         });
         it("402 will be retried and 3 times 402 results in error", function (done) {
             var nocked = nock('http://www.example.com').get('/foo').times(3).reply(402);
-            var promise = download.downloadOneUrlWithRetry(tmpDir, "http://www.example.com/foo", 3, "3/14");
+            var promise = download.downloadOneUrlWithRetry(tmpDir, "http://www.example.com/foo", 3, "3/14", loggers.null_logger);
             promise.then(
                 function () {
                     assert.fail();
@@ -45,7 +46,7 @@ describe('download', function () {
         it("402 will be retried and 2 times 402 + 200 is ok", function (done) {
             var nocked = nock('http://www.example.com').get('/foo').times(2).reply(402).
                 get("/foo").reply(200);
-            var promise = download.downloadOneUrlWithRetry(tmpDir, "http://www.example.com/foo", 3, "3/14");
+            var promise = download.downloadOneUrlWithRetry(tmpDir, "http://www.example.com/foo", 3, "3/14", loggers.null_logger);
             promise.then(
                 function () {
                     nocked.done();
@@ -58,7 +59,7 @@ describe('download', function () {
         });
         it("404 will not be retried and results in error", function (done) {
             var nocked = nock('http://www.example.com').get('/foo').reply(404);
-            var promise = download.downloadOneUrlWithRetry(tmpDir, "http://www.example.com/foo", 3, "3/14");
+            var promise = download.downloadOneUrlWithRetry(tmpDir, "http://www.example.com/foo", 3, "3/14", loggers.null_logger);
             promise.then(
                 function () {
                     assert.fail();
@@ -71,7 +72,7 @@ describe('download', function () {
         });
         it("unknown dns will cause an error", function (done) {
             var nocked = nock('http://www.example.com').get('/foo').reply(302, "", {"Location": "http://navigationshilfe1.t-online.de/dnserror?url=http://www.example.com/foo"});
-            var promise = download.downloadOneUrlWithRetry(tmpDir, "http://www.example.com/foo", 3, "3/14");
+            var promise = download.downloadOneUrlWithRetry(tmpDir, "http://www.example.com/foo", 3, "3/14", loggers.null_logger);
             promise.then(
                 function () {
                     assert.fail();
