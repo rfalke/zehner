@@ -23,6 +23,8 @@
         "url": "https://github.com/rfalke/zehner/issues"
     },
     "homepage": "https://github.com/rfalke/zehner",
+    "bin": "./zehner.js",
+    "preferGlobal": true,
     "devDependencies": {
         "jshint": "latest",
         "istanbul": "latest",
