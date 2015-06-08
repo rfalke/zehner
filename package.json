@@ -6,7 +6,8 @@
     "scripts": {
         "lint": "jshint -c .jshintrc *.js **/*.js",
         "test": "mocha test/",
-        "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/"
+        "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/",
+        "style": "./node_modules/jscs/bin/jscs -v -c .jscsrc  zehner.js lib/*.js test/*.js"
     },
     "repository": {
         "type": "git",
@@ -25,7 +26,8 @@
     "devDependencies": {
         "jshint": "latest",
         "istanbul": "latest",
-        "mocha": "latest"
+        "mocha": "latest",
+        "jscs": "latest"
     },
     "dependencies": {
         "request": "latest",

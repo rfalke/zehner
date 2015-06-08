@@ -1,0 +1,9 @@
+{
+    "preset": "node-style-guide",
+    "requireSpacesInsideParentheses":null,
+    "requireSpacesInsideArrayBrackets":null,
+    "maximumLineLength": 128,
+    "validateIndentation":4,
+    "disallowSpacesInFunction":null,
+    "requireTrailingComma":null
+}
