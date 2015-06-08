@@ -4,8 +4,8 @@ var assert = require("assert");
 var nock = require('nock');
 var os = require("os");
 var fs = require("fs");
-var download = require("../download");
-var loggers = require("../logger");
+var download = require("../lib/download");
+var loggers = require("../lib/logger");
 
 describe('download', function () {
     function rm_r(dir) {

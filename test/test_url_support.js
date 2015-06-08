@@ -1,7 +1,7 @@
 "use strict";
 
 var assert = require("assert");
-var url_support = require("../url_support");
+var url_support = require("../lib/url_support");
 
 describe('url support', function () {
     var full = "http://www.example.com/abc/dec";

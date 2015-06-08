@@ -1,7 +1,7 @@
 "use strict";
 
 var assert = require("assert");
-var utils = require("../utils");
+var utils = require("../lib/utils");
 
 describe('utils', function () {
     it("format bytes", function () {

@@ -2,7 +2,7 @@
     "name": "zehner",
     "version": "0.0.0",
     "description": "web crawler with node.js",
-    "main": "index.js",
+    "main": "zehner.js",
     "scripts": {
         "lint": "jshint -c .jshintrc *.js **/*.js",
         "test": "mocha test/"

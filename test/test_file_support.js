@@ -2,7 +2,7 @@
 var assert = require("assert");
 var os = require("os");
 var fs = require("fs");
-var file_support = require("../file_support");
+var file_support = require("../lib/file_support");
 
 function rm_r(dir) {
     fs.readdirSync(dir).forEach(function (name) {

@@ -1,7 +1,7 @@
 "use strict";
 
 var assert = require("assert");
-var extraction = require("../extraction");
+var extraction = require("../lib/extraction");
 
 describe('extraction', function () {
     var url = "http://www.example.com/abc/dec";

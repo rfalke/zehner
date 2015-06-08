@@ -1,9 +1,9 @@
 "use strict";
 
 var sprintf = require("sprintf-js").sprintf;
-var download = require("./download");
-var utils = require("./utils");
-var loggermod = require("./logger");
+var download = require("./lib/download");
+var utils = require("./lib/utils");
+var loggermod = require("./lib/logger");
 
 var outputDir = process.argv[2];
 var startUrl = process.argv[3];
