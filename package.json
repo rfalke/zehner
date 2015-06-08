@@ -5,7 +5,8 @@
     "main": "zehner.js",
     "scripts": {
         "lint": "jshint -c .jshintrc *.js **/*.js",
-        "test": "mocha test/"
+        "test": "mocha test/",
+        "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/"
     },
     "repository": {
         "type": "git",
@@ -23,6 +24,7 @@
     "homepage": "https://github.com/rfalke/zehner",
     "devDependencies": {
         "jshint": "latest",
+        "istanbul": "latest",
         "mocha": "latest"
     },
     "dependencies": {
