@@ -5,10 +5,43 @@ var download = require("./lib/download");
 var utils = require("./lib/utils");
 var loggermod = require("./lib/logger");
 
-var outputDir = process.argv[2];
-var startUrl = process.argv[3];
+var defaultConnections = 5;
 var numRetries = 5;
-var numParallelDownload = 5;
+
+var ArgumentParser = require('argparse').ArgumentParser;
+var parser = new ArgumentParser({
+    version: 'zehner 0.1.0',
+    addHelp: true,
+    description: 'Zehner: A web crawler written in node.js.'
+});
+parser.addArgument(
+    [ '-o'],
+    {
+        help: 'set the output directory [defaults to "."]',
+        defaultValue: ".",
+        metavar: "DIR"
+    }
+);
+parser.addArgument(
+    [ '-p' ],
+    {
+        help: 'download with CONNECTIONS in parallel [defaults to ' + defaultConnections + ']',
+        defaultValue: defaultConnections,
+        metaVar: "CONNECTIONS",
+        type: "int"
+    }
+);
+parser.addArgument(
+    [ 'URL' ],
+    {
+        help: 'the start url'
+    }
+);
+var args = parser.parseArgs();
+
+var outputDir = args.o;
+var startUrl = args.URL;
+var numParallelDownload = args.p;
 
 function download_one_batch_seq(outputDir, urlsTodo, callback) {
     var newUrls = [];

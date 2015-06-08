@@ -29,6 +29,7 @@
         "request": "latest",
         "sprintf-js": "latest",
         "nock": "latest",
-        "q": "latest"
+        "q": "latest",
+        "argparse": "latest"
     }
 }
